@@ -2,9 +2,20 @@
   <q-page
     class="q-pa-sm bg-grey-2 text-red flex flex-center"
     :style="{ height: heightQpage }"
-    :style-fn="setHeightQPage" @click="createImage"
+    :style-fn="setHeightQPage"
   >
-    <div id="PLAYGROUND"
+    <div v-if="!G_IMAGE"
+      style="background:linear-gradient(0deg,#F9E6FF, #FFEDED)"
+      class="tw-h-full flex flex-center tw-w-full tw-border
+        tw-border-gray-400  tw-rounded tw-shadow-inner"
+       >
+      <div style="background:#ffffff99" @click="onPickFile" class="cursor-pointer column flex-center text-dark tw-border tw-border-2 tw-border-gray-400 tw-rounded tw-border-dashed q-pa-xl">
+        <img src="~/assets/image.png" class="tw-h-12" />
+        <span class="text-bold">Upload an image</span>
+        
+      </div>
+    </div>
+    <div v-else id="PLAYGROUND"
       class="tw-h-full tw-w-fit flex flex-center text-yellow tw-rounded-md overflow-hidden"
       v-bind:style="{ padding: G_FRAME + 'px',background : 'linear-gradient('+ G_ROTATION +'deg,'+ hexToHSL(G_COLOR,G_GRADIENT)+')' }"
     >
@@ -15,10 +26,11 @@
           padding: G_PADDING + 'px',
           'box-shadow': '0px 0px ' + G_SHADOW + 'px' + ' #111111ff',
         }"
-        src="https://media.idownloadblog.com/wp-content/uploads/2016/04/iPhone-abstract-portrait-1-macinmac.jpg"
+        :src="G_IMAGE"
       />
+        <!-- src="https://media.idownloadblog.com/wp-content/uploads/2016/04/iPhone-abstract-portrait-1-macinmac.jpg" -->
     </div>
-    <q-footer bordered class="bg-white text-dark">
+    <q-footer bordered class="bg-white text-dark" @click="reset()">
       <q-toolbar class="flex flex-center">
         <div class="tw-w-full tw-container row q-gutter-lg">
         <div class="col row q-py-sm tw-items-center justify-end">
@@ -94,6 +106,8 @@
         </div>
       </q-toolbar>
     </q-footer>
+    <input type="file" style="display:none" accept="image/*" multiple="multiple" ref="myFileInput"
+                       @change="previewMultiImage" class="form-control-file rounded-borders" id="my-file">
   </q-page>
 </template>
 
@@ -114,10 +128,60 @@ export default defineComponent({
       G_SHADOW: ref(0),
       G_GRADIENT: ref(0),
       G_ROTATION: ref(0),
-      G_BG_GRADIENT:ref()
+      G_IMAGE: ref(),
+      preview_list: ref([]),
+      image_list: ref([]),
+
     };
   },
   methods: {
+    reset(){
+      this.G_COLOR ="#ff0000"
+      this.G_FRAME= 60
+      this.G_RADIUS= 30
+      this.G_PADDING= 24
+      this.G_SHADOW= 0
+      this.G_GRADIENT= 0
+      this.G_ROTATION= 0
+      this.G_IMAGE= null
+      this.preview_list= []
+      this.image_list= []
+    },
+    previewMultiImage: function(e) {
+      console.log(e)
+      var input = event.target
+      var count = input.files.length;
+      var index = 0;
+      if (input.files) {
+        while(count --) {
+          
+          var reader = new FileReader();
+          reader.onload = (e) => {
+            this.preview_list.push(e.target.result);
+            this.G_IMAGE = this.preview_list[0]
+          }
+          this.image_list.push(input.files[index]);
+          reader.readAsDataURL(input.files[index]);
+          index ++;
+        }
+        console.log(this.image_list)
+        
+      }
+    },
+    onPickFile() {
+      this.$refs.myFileInput.click()
+    },
+    onFilePicked (event) {
+      const files = event.target.files
+      console.log(files)
+      let filename = files[0].name
+      const fileReader = new FileReader()
+      fileReader.addEventListener('load', () => {
+          this.imageUrl = fileReader.result
+      })
+      fileReader.readAsDataURL(files[0])
+      this.G_IMAGE = files[0]
+    },
     createImage() {
 
       domtoimage.toJpeg(document.getElementById('PLAYGROUND'), {quality: 0.95})

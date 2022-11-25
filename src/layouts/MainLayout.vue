@@ -10,7 +10,8 @@
         </span>
       </q-toolbar-title>
       <div>
-        <q-btn class="glossy" rounded color="pink-6" label="Glossy Rounded" />
+        <q-btn class="q-mr-md" outline rounded color="pink-6" label="Restart" />
+        <q-btn class="glossy" rounded color="pink-6" label="Generate" />
       </div>
     </q-toolbar>
   </q-header>
