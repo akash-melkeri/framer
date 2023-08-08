@@ -71,4 +71,4 @@ jobs:
         run: echo "DEPLOYMENT_URL=/$(basename $GITHUB_REPOSITORY)/pr-preview/${{ env.PR_NUMBER }}" >> $GITHUB_ENV
 
       - name: Show Deployment URL
-        run: echo "Deployment URL: $DEPLOYMENT_URL"
+        run: echo "Deployment URL= $DEPLOYMENT_URL"
