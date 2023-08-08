@@ -47,7 +47,7 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           path: dist/spa
-          publish_branch: pr-preview/${{ github.event.pull_request.number }}
+          
 
   # Deployment job
   deploy:
@@ -61,4 +61,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
+        with:
+          publish_branch: pr-preview/${{ github.event.pull_request.number }}
 
