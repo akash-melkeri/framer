@@ -6,7 +6,7 @@
       <q-toolbar-title class="row">
         <img src="~assets/main.svg" class="inline">
         <span class="q-mx-sm">
-          Framer 2
+          Framer 22
         </span>
       </q-toolbar-title>
       <div>
