@@ -1,33 +1,50 @@
-name: Build & Deploy
+name: Deploy to GitHub Pages
+
 on:
+  # Runs on pushes targeting the `main` branch. Change this to `master` if you're
+  # using the `master` branch as the default branch.
   push:
-    branches:
-      - main
+    branches: [main]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+
 jobs:
-  build:
-    runs-on: ubuntu-20.04
+  deploy:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Setup Node
-        uses: actions/setup-node@v1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2a
         with:
-          node-version: '10.x'
-      - name: Cache
-        uses: actions/cache@v1
+          node-version: 16  # Change this to your desired Node.js version
+
+      - name: Install Quasar cli
+        run: npm i -g @quasar/cli
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Quasar project
+        run: quasar build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Install
-        run: npm ci
-      - name: Build
-        run: npm run build
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BASE_BRANCH: main
-          BRANCH: gh-pages
-          FOLDER: dist/spa
+          publish_dir: dist/spa  # Change this if your build output directory is different
