@@ -54,7 +54,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: /$(basename $GITHUB_REPOSITORY)/pr-preview/${{ env.PR_NUMBER }}
+      url: "/pr-preview/${{ github.event.pull_request.number }}"
     needs: build
     runs-on: ubuntu-latest
     name: Deploy
