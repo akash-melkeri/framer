@@ -33,7 +33,7 @@ jobs:
         with:
           fetch-depth: 0 # Not needed if lastUpdated is not enabled
       - name: Get env details
-        run: echo "GITHUB_ENV= ${{env}}"
+        run: echo "GITHUB_ENV= ${{toJson(env)}}"
 
       - name: Setup Node
         uses: actions/setup-node@v3
