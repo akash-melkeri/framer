@@ -54,7 +54,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: "/pr-preview/${{ github.event.pull_request.number }}"
+      url: ${{ steps.deployment.outputs.page_url }}/pr-preview/${{ github.event.pull_request.number }}
     needs: build
     runs-on: ubuntu-latest
     name: Deploy
@@ -62,15 +62,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-      - name: Get PR Number
-        id: pr_number
-        run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
-
-      - name: Update Deployment URL
-        id: update_deployment_url
-        run: echo "DEPLOYMENT_URL=/$(basename $GITHUB_REPOSITORY)/pr-preview/${{ env.PR_NUMBER }}" >> $GITHUB_ENV
-      - name: Show GITHUB ENV
-        run: echo "GITHUB_ENV= $GITHUB_ENV"
-
-      - name: Show Deployment URL
-        run: echo "Deployment URL= $DEPLOYMENT_URL"
