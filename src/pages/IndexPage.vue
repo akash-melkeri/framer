@@ -12,7 +12,7 @@
       <div style="background:#ffffff99" @click="onPickFile" class="cursor-pointer column flex-center text-dark tw-border tw-border-2 tw-border-gray-400 tw-rounded tw-border-dashed q-pa-xl">
         <img src="~/assets/image.png" class="tw-h-12" />
         <span class="text-bold">Upload an image</span>
-        
+
       </div>
     </div>
     <div v-else id="PLAYGROUND"
@@ -30,7 +30,7 @@
       />
         <!-- src="https://media.idownloadblog.com/wp-content/uploads/2016/04/iPhone-abstract-portrait-1-macinmac.jpg" -->
     </div>
-    <q-footer bordered class="bg-white text-dark" @click="reset()">
+    <q-footer bordered class="bg-white text-dark">
       <q-toolbar class="flex flex-center">
         <div class="tw-w-full tw-container row q-gutter-lg">
         <div class="col row q-py-sm tw-items-center justify-end">
@@ -154,7 +154,7 @@ export default defineComponent({
       var index = 0;
       if (input.files) {
         while(count --) {
-          
+
           var reader = new FileReader();
           reader.onload = (e) => {
             this.preview_list.push(e.target.result);
@@ -165,7 +165,7 @@ export default defineComponent({
           index ++;
         }
         console.log(this.image_list)
-        
+
       }
     },
     onPickFile() {
