@@ -113,12 +113,14 @@
 
 <script>
 import { defineComponent,ref } from 'vue'
-import { domtoimage } from 'dom-to-image';
+import { EventBus } from 'quasar';
+import domtoimage from 'dom-to-image';
 
 export default defineComponent({
   name: 'IndexPage',
   setup() {
     return {
+      domtoimage,
       visible: ref(true),
       heightQpage: ref(),
       G_COLOR:ref("#ff0000"),
@@ -164,7 +166,6 @@ export default defineComponent({
           reader.readAsDataURL(input.files[index]);
           index ++;
         }
-        console.log(this.image_list)
 
       }
     },
@@ -173,7 +174,6 @@ export default defineComponent({
     },
     onFilePicked (event) {
       const files = event.target.files
-      console.log(files)
       let filename = files[0].name
       const fileReader = new FileReader()
       fileReader.addEventListener('load', () => {
@@ -183,8 +183,14 @@ export default defineComponent({
       this.G_IMAGE = files[0]
     },
     createImage() {
-
-      domtoimage.toJpeg(document.getElementById('PLAYGROUND'), {quality: 0.95})
+      if(this.G_IMAGE == null){
+        this.$q.notify({
+          type: 'negative',
+          message: 'Please select an image'
+        })
+        return
+      }
+      this.domtoimage.toJpeg(document.getElementById('PLAYGROUND'), {quality: 0.95})
         .then(function (dataUrl) {
           var link = document.createElement('a');
           link.download = 'my-image-name.jpeg';
@@ -247,9 +253,21 @@ export default defineComponent({
       return "hsl(" + h + "," + s + "%," + ((l-percent > 0)?l-percent:l) + "%)"+ ',' + "hsl(" + ((h+percent*1.5 < 360)?h+percent*1.5:(h+percent*1.5)-360) + "," + s + "%," + l + "%)";
       // else if (flag == 2)
       //   return "hsl(" + h + "," + s + "%," + ((l+20 < 100)?l+20:100) + "%)";
+    },
+    download_image(){
+      this.createImage()
+    },
+    restart(){
+      this.G_IMAGE = null
+      this.preview_list = []
+      this.image_list = []
+      // this.preview_list.push('https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80')
+      // this.G_IMAGE = this.preview_list[0]
     }
   },
   created() {
+    this.$eventBus.on('generate', this.download_image)
+    this.$eventBus.on('restart', this.restart)
   },
 })
 </script>

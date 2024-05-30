@@ -10,8 +10,8 @@
         </span>
       </q-toolbar-title>
       <div>
-        <q-btn class="q-mr-md" outline rounded color="pink-6" label="Restart" />
-        <q-btn class="glossy" rounded color="pink-6" label="Generate" />
+        <q-btn class="q-mr-md" outline rounded color="pink-6" @click="restart" label="Restart" />
+        <q-btn class="glossy" rounded color="pink-6" @click="generate" label="Generate" />
       </div>
     </q-toolbar>
   </q-header>
@@ -26,6 +26,7 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { EventBus } from 'quasar';
 
 const linksList = [
   {
@@ -89,7 +90,15 @@ export default defineComponent({
         leftDrawerOpen.value = !leftDrawerOpen.value
       }
     }
-  }
+  },
+  methods:{
+    generate(){
+      this.$eventBus.emit('generate', true)
+    },
+    restart(){
+      this.$eventBus.emit('restart', true)
+    },
+  },
 })
 </script>
 <style>

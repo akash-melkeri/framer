@@ -9,6 +9,7 @@
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
 
 
+const { Notify } = require('quasar');
 const { configure } = require('quasar/wrappers');
 
 module.exports = configure(function (ctx) {
@@ -23,7 +24,7 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
     boot: [
-
+      'register',
 
     ],
 
@@ -98,7 +99,9 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Notify',
+      ]
     },
 
     // animations: 'all', // --- includes all animations
